@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: batch
+  profiles:
+    active: shared,shared-local,local
