@@ -1,4 +1,4 @@
-rootProject.name = "book-reccomender-be"
+rootProject.name = "book-recommender-be"
 
 include("projects:shared")
 include("projects:api")

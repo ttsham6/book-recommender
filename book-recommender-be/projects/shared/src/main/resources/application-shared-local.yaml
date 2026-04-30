@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    aws:
+      s3:
+        access-key: ${AWS_ACCESS_KEY_ID}
+        secret-key: ${AWS_SECRET_ACCESS_KEY}
+      dynamodb:
+        endpoint: http://localhost:8000
+
+book-recommender:
+  rakuten:
+    url: https://openapi.rakuten.co.jp/services/api/BooksTotal/Search/20170404
+    application-id: ${RAKUTEN_APPLICATION_ID}
+    access-key: ${RAKUTEN_ACCESS_KEY}
+    page-size: 1

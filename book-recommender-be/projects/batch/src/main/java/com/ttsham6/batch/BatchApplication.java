@@ -6,7 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.ttsham6.batch","com.ttsham6.shared"})
+@ComponentScan(basePackages = {"com.ttsham6.batch", "com.ttsham6.shared"})
 public class BatchApplication {
 
   public static void main(String[] args) {
