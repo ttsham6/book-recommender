@@ -104,14 +104,16 @@ public class DynamoDBRepository {
     }
   }
 
-  public Optional<BookDto> findById(String id) throws DynamoDBRepositoryException {
+  public Optional<BookDto> findById(String id) {
+
     try {
       final var table = table();
       final var key = Key.builder().partitionValue(id).build();
       final var item = table.getItem(key);
       return Optional.ofNullable(item);
     } catch (DynamoDbException e) {
-      throw new DynamoDBRepositoryException("Failed to find clothing by id: " + id, e);
+      logger.warn("Failed to find Book with id: {}", id, e);
+      return Optional.empty();
     }
   }
 }

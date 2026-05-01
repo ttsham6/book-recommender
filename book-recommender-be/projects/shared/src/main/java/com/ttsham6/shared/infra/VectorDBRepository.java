@@ -102,12 +102,12 @@ public class VectorDBRepository {
       // Build the query request
       final var index = pineconeClient.getIndexConnection(pineconeIndex);
       // Query with optional filters
-      final var results = index.queryByVector(limit, embeddingList, "clothing");
+      final var results = index.queryByVector(limit, embeddingList, NAMESPACE);
       // Convert results to SimilaritySearchResult list
       return results.getMatchesList().stream()
           .map(match -> new SimilaritySearchResult(match.getId(), match.getScore()));
     } catch (Exception e) {
-      throw new VectorDbClientException("Failed to search similar clothing", e);
+      throw new VectorDbClientException("Failed to search similar book", e);
     }
   }
 
