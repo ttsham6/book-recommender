@@ -5,6 +5,7 @@ import com.ttsham6.shared.domain.Book;
 import com.ttsham6.shared.domain.PostageFlag;
 import java.util.List;
 import java.util.UUID;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbImmutable;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -74,6 +75,39 @@ public record BookDto(
 
   public static Builder builder() {
     return new Builder();
+  }
+
+  @DynamoDbIgnore
+  public Book toBook() {
+    return new Book(
+        id,
+        title,
+        author,
+        artistName,
+        publisherName,
+        label,
+        isbn,
+        jan,
+        hardware,
+        os,
+        itemCaption,
+        salesDate,
+        itemPrice,
+        listPrice,
+        discountRate,
+        discountPrice,
+        itemUrl,
+        affiliateUrl,
+        smallImageUrl,
+        mediumImageUrl,
+        largeImageUrl,
+        chirayomiUrl,
+        availability,
+        postageFlag,
+        limited,
+        reviewCount,
+        reviewAverage,
+        genreIds);
   }
 
   @DynamoDbPartitionKey
