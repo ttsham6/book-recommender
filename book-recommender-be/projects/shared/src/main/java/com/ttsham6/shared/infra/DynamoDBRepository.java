@@ -1,6 +1,6 @@
-package com.ttsham6.shared.infrastructure;
+package com.ttsham6.shared.infra;
 
-import com.ttsham6.shared.infrastructure.dto.BookDto;
+import com.ttsham6.shared.infra.dto.BookDto;
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;

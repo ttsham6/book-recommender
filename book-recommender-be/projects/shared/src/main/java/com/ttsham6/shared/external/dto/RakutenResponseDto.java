@@ -1,7 +1,7 @@
 package com.ttsham6.shared.external.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ttsham6.shared.domain.book.Book;
+import com.ttsham6.shared.domain.Book;
 import java.util.List;
 
 public record RakutenResponseDto(@JsonProperty("Items") List<RakutenItemWrapper> items) {

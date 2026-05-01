@@ -1,2 +1,15 @@
-recommendation:
-  default-max-results: 5
+spring:
+  ai:
+    embeddings:
+      transformer:
+        onnx:
+          modelUri: "https://huggingface.co/intfloat/e5-small-v2/resolve/main/model.onnx"
+        tokenizer:
+          uri: "https://huggingface.co/intfloat/e5-small-v2/resolve/main/tokenizer.json"
+
+book-recommender:
+  model:
+    dir: ${MODEL_DIR:/tmp}
+    s3:
+      bucket: fitstyle-model-bucket # TODO: サービス専用のバケットを用意
+      prefix: model/
