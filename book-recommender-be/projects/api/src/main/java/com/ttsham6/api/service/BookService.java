@@ -10,29 +10,35 @@ import com.ttsham6.shared.service.LocalEmbeddingService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SimilarSearchService {
-  private static final Logger logger = LoggerFactory.getLogger(SimilarSearchService.class);
+public class BookService {
+  private static final org.slf4j.Logger logger =
+      org.slf4j.LoggerFactory.getLogger(BookService.class);
   private static final int LIMIT = 10;
 
+  private final DynamoDBRepository dynamoDBRepository;
   private final LocalEmbeddingService embeddingService;
   private final VectorDBRepository vectorDBRepository;
-  private final DynamoDBRepository dynamoDBRepository;
 
-  public SimilarSearchService(
+  public BookService(
+      DynamoDBRepository dynamoDBRepository,
       LocalEmbeddingService embeddingService,
-      VectorDBRepository vectorDBRepository,
-      DynamoDBRepository dynamoDBRepository) {
+      VectorDBRepository vectorDBRepository) {
+    this.dynamoDBRepository = dynamoDBRepository;
     this.embeddingService = embeddingService;
     this.vectorDBRepository = vectorDBRepository;
-    this.dynamoDBRepository = dynamoDBRepository;
   }
 
-  public List<Book> search(String query) {
+  public List<Book> getBooksByTitle(String query) {
+    return dynamoDBRepository.getBooksByTitle(query).stream()
+        .map(BookDto::toBook)
+        .limit(LIMIT)
+        .toList();
+  }
+
+  public List<Book> similarSearch(String query) {
     try {
       // embedding
       final var queryEmbedding = embeddingService.embedQuery(query);

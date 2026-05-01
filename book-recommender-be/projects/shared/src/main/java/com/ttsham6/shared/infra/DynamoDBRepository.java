@@ -82,6 +82,24 @@ public class DynamoDBRepository {
     table.putItem(bookDto);
   }
 
+  public List<BookDto> getBooksByTitle(String query) {
+    final var table = table();
+
+    final var scanRequest =
+        ScanEnhancedRequest.builder()
+            .filterExpression(
+                Expression.builder()
+                    .expression("contains(#title, :query)")
+                    .putExpressionName("#title", "title")
+                    .putExpressionValue(":query", AttributeValue.fromS(query))
+                    .build())
+            .build();
+
+    final var results = table.scan(scanRequest);
+
+    return results.items().stream().toList();
+  }
+
   public List<BookDto> scan(List<String> words) throws DynamoDBRepositoryException {
     try {
       final var table = table();

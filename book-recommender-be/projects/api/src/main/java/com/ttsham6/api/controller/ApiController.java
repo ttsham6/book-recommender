@@ -1,7 +1,7 @@
 package com.ttsham6.api.controller;
 
 import com.ttsham6.api.dto.BookResponse;
-import com.ttsham6.api.service.SimilarSearchService;
+import com.ttsham6.api.service.BookService;
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ApiController {
-  private final SimilarSearchService similarSearchService;
+  private final BookService bookService;
 
-  public ApiController(SimilarSearchService similarSearchService) {
-    this.similarSearchService = similarSearchService;
+  public ApiController(BookService bookService) {
+    this.bookService = bookService;
   }
 
   /** ヘルスチェックエンドポイント */
@@ -26,7 +26,13 @@ public class ApiController {
   /** レコメンデーションを取得 */
   @GetMapping("/recommendations")
   public BookResponse getRecommendations(@RequestParam String query) {
-    final var items = similarSearchService.search(query);
+    final var items = bookService.similarSearch(query);
+    return new BookResponse(items.size(), items);
+  }
+
+  @GetMapping("/item")
+  public BookResponse getItem(@RequestParam String query) {
+    final var items = bookService.getBooksByTitle(query);
     return new BookResponse(items.size(), items);
   }
 }
