@@ -1,0 +1,39 @@
+name: Build Gradle Project
+description: "Build a Gradle project and upload the artifact"
+
+inputs:
+  project:
+    description: "Project name (batch or api)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Gradle Cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Gradle build
+      working-directory: ./book-recommender-be
+      run: ./gradlew projects:${{ inputs.project }}:build -x checkstyleMain -x checkstyleTest
+      shell: bash
+
+    - name: Rename jar
+      working-directory: ./book-recommender-be/projects/${{ inputs.project }}
+      run: cp ./build/libs/${{ inputs.project }}-*.jar ./build/libs/${{ inputs.project }}.jar
+      shell: bash
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.project }}-jar
+        path: ./book-recommender-be/projects/${{ inputs.project }}/build/libs/${{ inputs.project }}.jar
