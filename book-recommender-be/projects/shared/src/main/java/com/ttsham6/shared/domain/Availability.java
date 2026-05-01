@@ -1,4 +1,4 @@
-package com.ttsham6.shared.domain.book;
+package com.ttsham6.shared.domain;
 
 public enum Availability {
   IN_STOCK(1),

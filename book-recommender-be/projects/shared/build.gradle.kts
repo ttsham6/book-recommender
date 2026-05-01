@@ -28,7 +28,10 @@ dependencies {
     api("software.amazon.awssdk:s3")
     api("software.amazon.awssdk:s3-transfer-manager")
 
-    api("io.pinecone:pinecone-client:5.1.0")
+    api("io.pinecone:pinecone-client:5.1.0:all") {
+        isTransitive = false
+    }
+    api("io.grpc:grpc-api:1.60.2")
 
     // Local Inference (LangChain4j)
     api("dev.langchain4j:langchain4j-core:0.35.0")

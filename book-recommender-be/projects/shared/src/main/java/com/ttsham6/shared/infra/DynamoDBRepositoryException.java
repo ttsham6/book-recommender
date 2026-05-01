@@ -1,4 +1,4 @@
-package com.ttsham6.shared.infrastructure;
+package com.ttsham6.shared.infra;
 
 public class DynamoDBRepositoryException extends Exception {
   public DynamoDBRepositoryException(String message) {

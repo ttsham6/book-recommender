@@ -1,8 +1,8 @@
-package com.ttsham6.shared.infrastructure.dto;
+package com.ttsham6.shared.infra.dto;
 
-import com.ttsham6.shared.domain.book.Availability;
-import com.ttsham6.shared.domain.book.Book;
-import com.ttsham6.shared.domain.book.PostageFlag;
+import com.ttsham6.shared.domain.Availability;
+import com.ttsham6.shared.domain.Book;
+import com.ttsham6.shared.domain.PostageFlag;
 import java.util.List;
 import java.util.UUID;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbImmutable;

@@ -1,7 +1,7 @@
 package com.ttsham6.shared.external;
 
 import com.ttsham6.shared.config.RakutenApiProperty;
-import com.ttsham6.shared.domain.book.Book;
+import com.ttsham6.shared.domain.Book;
 import com.ttsham6.shared.external.dto.RakutenResponseDto;
 import java.net.URI;
 import java.net.URISyntaxException;
