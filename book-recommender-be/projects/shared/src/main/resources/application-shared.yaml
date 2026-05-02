@@ -11,5 +11,5 @@ book-recommender:
   model:
     dir: ${MODEL_DIR:/tmp}
     s3:
-      bucket: fitstyle-model-bucket # TODO: サービス専用のバケットを用意
+      bucket: bookreco-model-bucket
       prefix: model/
