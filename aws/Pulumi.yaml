@@ -1,0 +1,10 @@
+name: book-recommender-aws
+description: AWS for book-recommender
+runtime:
+  name: nodejs
+  options:
+    packagemanager: yarn
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript

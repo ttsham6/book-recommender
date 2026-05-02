@@ -1,0 +1,15 @@
+config:
+  aws:region: ap-northeast-1
+  book-recommender-aws:environment: shared,shared-prod,prod
+  book-recommender-aws:pineconeIndex: book-index
+  # secret
+  book-recommender-aws:rakutenApplicationId:
+    secure: AAABANhaQUI1b7VghyGsftoROSJI9wQLWcjxi6T1TAgKKJRHyaPPgikrrLrj7XnO63OGxIKClqYEHlBy5SWOzxG+U7Y=
+  book-recommender-aws:rakutenAccessKey:
+    secure: AAABAGd9M9Hc8e8Z6A6H5w4ShjKCD9Jubu+WLKzdWr9/NUrYgdzwM05f/MC/30VD3fZguVy57oWsthABDrOLGBluoHwSpENTT1+i+Hyb
+  book-recommender-aws:pineconeApiKey:
+    secure: AAABAPAjfBv7Dwk5Xu/C9G4STdrfbwfhYnBHWnuFjwA2td4D1sjNSHNxsiOKTpmS7wzkT6Nqad4o37/hCwmLvl/9WXuqaxCmeMEFXrakaPPpQOe7/Jd4/JVvB3ugvucvd4McPh7+R03U9sA=
+  book-recommender-aws:hostedZoneId:
+    secure: AAABAJs7saZy6Dz53SbIqbnZsyPbYJnlcoMR0oWy+3hAkslsf0JjQBPL46ws6Nn0muakhQ==
+  book-recommender-aws:certificateArn:
+    secure: AAABAMpYhsXMRlVY7gURryu09xwcpX7a+viXCMR1p/bOQPDMZxxgmMPd8UVa/M67lU10gR9QzrYrF0qIIASDx8WurbVKNLQ0K3LB6v3JPZeemFCsaMvJMK46eUFff0kAdSz3LY0YcI939rJHAHh1fc27T8LeRcbr
