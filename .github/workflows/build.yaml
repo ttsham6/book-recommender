@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - "book-recommender-be/**"
+      - "aws/**"
 
 permissions:
   checks: write
