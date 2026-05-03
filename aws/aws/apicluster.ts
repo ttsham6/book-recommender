@@ -120,7 +120,7 @@ export class ApiService extends pulumi.ComponentResource {
       {
         name: `${appName}-night-stop`,
         serviceNamespace: "ecs",
-        schedule: "cron(0 16 * * ? *)",
+        schedule: "cron(0 14 ? * FRI,SAT *)", // JST 23:00 UTC on Friday and Saturday
         scalableDimension: "ecs:service:DesiredCount",
         resourceId: pulumi.interpolate`service/${cluster.name}/${service.service.name}`,
         scalableTargetAction: { minCapacity: 0, maxCapacity: 0 },
@@ -133,7 +133,7 @@ export class ApiService extends pulumi.ComponentResource {
       {
         name: `${appName}-morning-start`,
         serviceNamespace: "ecs",
-        schedule: "cron(0 23 * * ? *)",
+        schedule: "cron(0 23 ? * FRI,SAT *)", // JST 8:00 AM on Saturday and Sunday
         scalableDimension: "ecs:service:DesiredCount",
         resourceId: pulumi.interpolate`service/${cluster.name}/${service.service.name}`,
         scalableTargetAction: { minCapacity: 1, maxCapacity: 1 },
