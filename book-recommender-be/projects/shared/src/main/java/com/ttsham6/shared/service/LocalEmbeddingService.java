@@ -1,9 +1,9 @@
 package com.ttsham6.shared.service;
 
-import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtSession;
+import ai.onnxruntime.OrtSession.SessionOptions;
 import com.ttsham6.shared.config.ModelProperty;
 import com.ttsham6.shared.infra.ModelS3Client;
 import com.ttsham6.shared.infra.ModelS3ClientException;
@@ -25,7 +25,7 @@ public class LocalEmbeddingService implements AutoCloseable {
   private final ModelS3Client modelS3Client;
   private OrtEnvironment env;
   private OrtSession session;
-  private HuggingFaceTokenizer tokenizer;
+  private LightweightSentencePieceTokenizer tokenizer;
 
   public LocalEmbeddingService(ModelProperty modelProperty, ModelS3Client modelS3Client) {
     this.modelProperty = modelProperty;
@@ -47,13 +47,26 @@ public class LocalEmbeddingService implements AutoCloseable {
       final var tokenizerPath = requireFile(modelDir, TOKENIZER_FILE_NAME);
 
       this.env = OrtEnvironment.getEnvironment();
-      this.session = env.createSession(onnxPath.toString(), new OrtSession.SessionOptions());
-      this.tokenizer = HuggingFaceTokenizer.newInstance(tokenizerPath);
+      try (final var sessionOptions = createSessionOptions()) {
+        this.session = env.createSession(onnxPath.toString(), sessionOptions);
+      }
+      this.tokenizer = LightweightSentencePieceTokenizer.fromTokenizerJson(tokenizerPath);
 
       logger.info("LocalEmbeddingService initialized successfully with quantized ONNX model.");
     } catch (Exception e) {
       throw new EmbeddingServiceException("Failed to initialize LocalEmbeddingService", e);
     }
+  }
+
+  private SessionOptions createSessionOptions() throws Exception {
+    final var options = new SessionOptions();
+    options.setOptimizationLevel(SessionOptions.OptLevel.NO_OPT);
+    options.setExecutionMode(SessionOptions.ExecutionMode.SEQUENTIAL);
+    options.setInterOpNumThreads(1);
+    options.setIntraOpNumThreads(1);
+    options.setMemoryPatternOptimization(false);
+    options.setCPUArenaAllocator(false);
+    return options;
   }
 
   private Path requireFile(Path modelDir, String fileName) {
@@ -81,9 +94,9 @@ public class LocalEmbeddingService implements AutoCloseable {
     try {
       // Batch size = 1
       final var encoding = tokenizer.encode(text);
-      final long[][] inputIdsBatch = {encoding.getIds()};
-      final long[][] attentionMaskBatch = {encoding.getAttentionMask()};
-      final long[][] tokenTypeIdsBatch = {encoding.getTypeIds()};
+      final long[][] inputIdsBatch = {encoding.ids()};
+      final long[][] attentionMaskBatch = {encoding.attentionMask()};
+      final long[][] tokenTypeIdsBatch = {encoding.typeIds()};
 
       try (var inputIdsTensor = OnnxTensor.createTensor(env, inputIdsBatch);
           final var attentionMaskTensor = OnnxTensor.createTensor(env, attentionMaskBatch);
@@ -154,7 +167,7 @@ public class LocalEmbeddingService implements AutoCloseable {
         env.close();
       }
       if (tokenizer != null) {
-        tokenizer.close();
+        tokenizer = null;
       }
     } catch (Exception e) {
       logger.error("Error closing LocalEmbeddingService resources", e);
