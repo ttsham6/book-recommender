@@ -3,7 +3,6 @@ package com.ttsham6.shared.service;
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtSession;
-import ai.onnxruntime.OrtSession.SessionOptions;
 import com.ttsham6.shared.config.ModelProperty;
 import com.ttsham6.shared.infra.ModelS3Client;
 import com.ttsham6.shared.infra.ModelS3ClientException;
@@ -47,26 +46,13 @@ public class LocalEmbeddingService implements AutoCloseable {
       final var tokenizerPath = requireFile(modelDir, TOKENIZER_FILE_NAME);
 
       this.env = OrtEnvironment.getEnvironment();
-      try (final var sessionOptions = createSessionOptions()) {
-        this.session = env.createSession(onnxPath.toString(), sessionOptions);
-      }
+      this.session = env.createSession(onnxPath.toString());
       this.tokenizer = LightweightSentencePieceTokenizer.fromTokenizerJson(tokenizerPath);
 
       logger.info("LocalEmbeddingService initialized successfully with quantized ONNX model.");
     } catch (Exception e) {
       throw new EmbeddingServiceException("Failed to initialize LocalEmbeddingService", e);
     }
-  }
-
-  private SessionOptions createSessionOptions() throws Exception {
-    final var options = new SessionOptions();
-    options.setOptimizationLevel(SessionOptions.OptLevel.NO_OPT);
-    options.setExecutionMode(SessionOptions.ExecutionMode.SEQUENTIAL);
-    options.setInterOpNumThreads(1);
-    options.setIntraOpNumThreads(1);
-    options.setMemoryPatternOptimization(false);
-    options.setCPUArenaAllocator(false);
-    return options;
   }
 
   private Path requireFile(Path modelDir, String fileName) {
