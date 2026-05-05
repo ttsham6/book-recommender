@@ -4,7 +4,7 @@
 
 ## 概要
 
-huggin face からモデルをダウンロードし、ONNX Runtime で利用可能な形式 (`model_quantized.onnx`, `tokenizer.json` 等) に変換します。
+huggin face からモデルをダウンロードし、ONNX Runtime で利用可能な形式 (`model_quantized.onnx`, `tokenizer.onnx` 等) に変換します。Java 側は `tokenizer.onnx` と `model_quantized.onnx` の2段構成で利用します。
 出力されたモデルファイルは `book-recommender-be` プロジェクトでローカル推論に使用されます。
 
 ## 前提条件
@@ -34,8 +34,7 @@ docker run -it --rm \
 ## 生成されるファイル
 
 *   `model_quantized.onnx`: ONNX形式のモデル本体
-*   `tokenizer.json`: トークナイザー設定
-*   `vocab.txt`: 語彙ファイル
+*   `tokenizer.onnx`: ONNX Runtime Extensions 用 tokenizer 前処理モデル
 *   その他設定ファイル (`config.json` 等)
 
 ## S3へのアップロード
@@ -47,8 +46,9 @@ docker run -it --rm \
 AWS CLIを使用して、ローカルのモデルディレクトリをS3バケットに同期します。
 
 ```bash
-# `model_quantized.onnx` と `config.json` のみをアップロードするします。
+# `model_quantized.onnx` と `tokenizer.onnx` を主対象としてアップロードするします。
 aws s3 cp ./model/model_quantized.onnx s3://book-model-bucket/model/model_quantized.onnx
+aws s3 cp ./model/tokenizer.onnx s3://book-model-bucket/model/tokenizer.onnx
 aws s3 cp ./model/config.json s3://book-model-bucket/model/config.json
 ```
 
@@ -60,6 +60,7 @@ aws s3 cp ./model/config.json s3://book-model-bucket/model/config.json
 fitstyle-model-bucket/
 └── model/
     ├── model_quantized.onnx         <-- ONNX形式のモデル本体
+    ├── tokenizer.onnx               <-- tokenizer 前処理モデル
     └── config.json        <-- 構成ファイル
 ```
 
@@ -67,3 +68,4 @@ fitstyle-model-bucket/
 
 *   `model_quantized.onnx` はファイルサイズが大きいため、Gitで管理する場合は **Git LFS** の利用を推奨します。
 *   S3バケット名やプレフィックスを変更した場合は、インフラエンジニアまたは環境変数設定を確認してください。
+*   Java API は `tokenizer.onnx` と `model_quantized.onnx` の2段構成で動作します。

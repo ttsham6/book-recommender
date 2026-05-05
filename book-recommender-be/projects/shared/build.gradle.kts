@@ -38,6 +38,7 @@ dependencies {
     api("dev.langchain4j:langchain4j-embeddings:0.35.0")
     // For ONNX support
     api("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0")
+    api("com.microsoft.onnxruntime:onnxruntime-extensions:0.13.0")
 
     api("org.junit.platform:junit-platform-launcher")
 }
