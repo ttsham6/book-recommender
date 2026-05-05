@@ -75,7 +75,7 @@ export class BatchService extends pulumi.ComponentResource {
                   {
                     name: "JAVA_OPTS",
                     value:
-                      "-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
+                      "-Xmx384m -XX:MaxRAMPercentage=50 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
                   },
                 ]),
                 logConfiguration: {
