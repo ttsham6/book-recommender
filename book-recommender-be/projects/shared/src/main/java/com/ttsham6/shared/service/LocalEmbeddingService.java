@@ -1,6 +1,5 @@
 package com.ttsham6.shared.service;
 
-import ai.djl.huggingface.tokenizers.HuggingFaceTokenizer;
 import ai.onnxruntime.OnnxTensor;
 import ai.onnxruntime.OrtEnvironment;
 import ai.onnxruntime.OrtSession;
@@ -25,7 +24,7 @@ public class LocalEmbeddingService implements AutoCloseable {
   private final ModelS3Client modelS3Client;
   private OrtEnvironment env;
   private OrtSession session;
-  private HuggingFaceTokenizer tokenizer;
+  private LightweightSentencePieceTokenizer tokenizer;
 
   public LocalEmbeddingService(ModelProperty modelProperty, ModelS3Client modelS3Client) {
     this.modelProperty = modelProperty;
@@ -47,8 +46,8 @@ public class LocalEmbeddingService implements AutoCloseable {
       final var tokenizerPath = requireFile(modelDir, TOKENIZER_FILE_NAME);
 
       this.env = OrtEnvironment.getEnvironment();
-      this.session = env.createSession(onnxPath.toString(), new OrtSession.SessionOptions());
-      this.tokenizer = HuggingFaceTokenizer.newInstance(tokenizerPath);
+      this.session = env.createSession(onnxPath.toString());
+      this.tokenizer = LightweightSentencePieceTokenizer.fromTokenizerJson(tokenizerPath);
 
       logger.info("LocalEmbeddingService initialized successfully with quantized ONNX model.");
     } catch (Exception e) {
@@ -81,9 +80,9 @@ public class LocalEmbeddingService implements AutoCloseable {
     try {
       // Batch size = 1
       final var encoding = tokenizer.encode(text);
-      final long[][] inputIdsBatch = {encoding.getIds()};
-      final long[][] attentionMaskBatch = {encoding.getAttentionMask()};
-      final long[][] tokenTypeIdsBatch = {encoding.getTypeIds()};
+      final long[][] inputIdsBatch = {encoding.ids()};
+      final long[][] attentionMaskBatch = {encoding.attentionMask()};
+      final long[][] tokenTypeIdsBatch = {encoding.typeIds()};
 
       try (var inputIdsTensor = OnnxTensor.createTensor(env, inputIdsBatch);
           final var attentionMaskTensor = OnnxTensor.createTensor(env, attentionMaskBatch);
@@ -154,7 +153,7 @@ public class LocalEmbeddingService implements AutoCloseable {
         env.close();
       }
       if (tokenizer != null) {
-        tokenizer.close();
+        tokenizer = null;
       }
     } catch (Exception e) {
       logger.error("Error closing LocalEmbeddingService resources", e);
