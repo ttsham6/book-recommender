@@ -64,8 +64,6 @@ public class LocalEmbeddingService implements AutoCloseable {
     this.modelSession = createModelSession(modelPath);
     this.tokenizerInputName = tokenizerSession.getInputNames().iterator().next();
     this.modelRequiresTokenTypeIds = modelSession.getInputNames().contains("token_type_ids");
-    logger.info("tokenizer output names={}", tokenizerSession.getOutputNames());
-    logger.info("model input names={}", modelSession.getInputNames());
   }
 
   /** 埋め込み推論本体のONNXセッションを作成する。 */
@@ -170,7 +168,6 @@ public class LocalEmbeddingService implements AutoCloseable {
         final var outputValues = getTokenizerOutput(ortSessionResults, outputName);
         if (outputValues == null) continue;
         final var normalizedName = outputName.toLowerCase();
-        logger.info("tokenizer output name={}, length={}", outputName, outputValues.length);
 
         if ((normalizedName.contains("input") && normalizedName.contains("id"))
             || normalizedName.equals("tokens")) {
@@ -188,11 +185,6 @@ public class LocalEmbeddingService implements AutoCloseable {
       attentionMask =
           attentionMask != null ? attentionMask : createFilledArray(inputIds.length, 1L);
       tokenTypeIds = tokenTypeIds != null ? tokenTypeIds : new long[inputIds.length];
-      logger.info(
-          "resolved tokenizer outputs input_ids={}, attention_mask={}, token_type_ids={}",
-          inputIds.length,
-          attentionMask.length,
-          tokenTypeIds.length);
       return new ModelInputs(inputIds, attentionMask, tokenTypeIds);
     }
   }
