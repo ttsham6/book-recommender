@@ -58,7 +58,7 @@ export class BatchService extends pulumi.ComponentResource {
       {
         family: `${appName}-task`,
         cpu: "256",
-        memory: "2048",
+        memory: "1024",
         requiresCompatibilities: ["FARGATE"],
         networkMode: "awsvpc",
         taskRoleArn: args.taskRoleArn,
