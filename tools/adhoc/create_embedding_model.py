@@ -1,19 +1,24 @@
 import os
 import sys
 from pathlib import Path
+
 from optimum.exporters.onnx import main_export
 from optimum.onnxruntime import ORTQuantizer
 from optimum.onnxruntime.configuration import AutoQuantizationConfig
 from transformers import AutoTokenizer
 
 REPO_ID = "intfloat/multilingual-e5-small"
+QUANTIZED_MODEL_NAME = "model_quantized.onnx"
+ORIGINAL_MODEL_NAME = "model.onnx"
+
 
 def run_task():
     print(f"Start exporting model from: {REPO_ID}")
-    
+
     output_dir = os.getenv("MODEL_DIR", "./model")
+    output_path = Path(output_dir)
     print(f"output_dir: {output_dir}")
-    
+
     try:
         main_export(
             REPO_ID,
@@ -27,23 +32,29 @@ def run_task():
         raise e
 
     try:
-        quantizer = ORTQuantizer.from_pretrained("./model")
+        quantizer = ORTQuantizer.from_pretrained(output_dir)
         qconfig = AutoQuantizationConfig.avx2(
             is_static=False,
             per_channel=False
         )
 
         quantizer.quantize(
-            save_dir="./model",
+            save_dir=output_dir,
             quantization_config=qconfig
         )
     except Exception as e:
         print(f"Error quantizing model: {e}")
         raise e
 
+    original_model_path = output_path / ORIGINAL_MODEL_NAME
+    if original_model_path.exists():
+        original_model_path.unlink()
+        print(f"Removed {ORIGINAL_MODEL_NAME}. Using {QUANTIZED_MODEL_NAME} for inference.")
+
     print("Loading and saving tokenizer...")
     try:
-        tokenizer = AutoTokenizer.from_pretrained(REPO_ID, trust_remote_code=True)
+        tokenizer = AutoTokenizer.from_pretrained(
+            REPO_ID, trust_remote_code=True)
         tokenizer.save_pretrained(output_dir)
     except Exception as e:
         print(f"Error loading/saving tokenizer: {e}")
@@ -51,8 +62,9 @@ def run_task():
 
     print(f"Conversion completed.")
     print(f"Files saved in {output_dir}:")
-    for f in Path(output_dir).iterdir():
+    for f in output_path.iterdir():
         print(f"  - {f.name}")
+
 
 if __name__ == "__main__":
     try:
