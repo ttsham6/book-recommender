@@ -3,3 +3,5 @@ transformers[ja,torch]>=4.40.0
 accelerate>=0.28.0
 torch>=2.2.0, <2.5.0
 sentencepiece
+onnx
+onnxruntime-extensions
