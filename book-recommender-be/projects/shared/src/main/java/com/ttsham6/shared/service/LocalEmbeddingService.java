@@ -7,6 +7,8 @@ import ai.onnxruntime.OrtSession;
 import com.ttsham6.shared.config.ModelProperty;
 import com.ttsham6.shared.infra.ModelS3Client;
 import com.ttsham6.shared.infra.ModelS3ClientException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalEmbeddingService implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(LocalEmbeddingService.class);
+  private static final String QUANTIZED_MODEL_FILE_NAME = "model_quantized.onnx";
+  private static final String TOKENIZER_FILE_NAME = "tokenizer.json";
 
   private final ModelProperty modelProperty;
   private final ModelS3Client modelS3Client;
@@ -39,17 +43,25 @@ public class LocalEmbeddingService implements AutoCloseable {
 
     try {
       final var modelDir = Paths.get(modelProperty.dir());
-      final var onnxPath = modelDir.resolve("model_quantized.onnx");
-      final var tokenizerPath = modelDir.resolve("tokenizer.json");
+      final var onnxPath = requireFile(modelDir, QUANTIZED_MODEL_FILE_NAME);
+      final var tokenizerPath = requireFile(modelDir, TOKENIZER_FILE_NAME);
 
       this.env = OrtEnvironment.getEnvironment();
       this.session = env.createSession(onnxPath.toString(), new OrtSession.SessionOptions());
       this.tokenizer = HuggingFaceTokenizer.newInstance(tokenizerPath);
 
-      logger.info("LocalEmbeddingService initialized successfully with e5-small.");
+      logger.info("LocalEmbeddingService initialized successfully with quantized ONNX model.");
     } catch (Exception e) {
       throw new EmbeddingServiceException("Failed to initialize LocalEmbeddingService", e);
     }
+  }
+
+  private Path requireFile(Path modelDir, String fileName) {
+    final var path = modelDir.resolve(fileName);
+    if (!Files.exists(path)) {
+      throw new IllegalStateException("Required model file not found: " + path);
+    }
+    return path;
   }
 
   public float[] embedPassage(String text) throws EmbeddingServiceException {
