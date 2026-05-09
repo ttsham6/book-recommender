@@ -95,7 +95,7 @@ public class VectorDBRepository {
     }
   }
 
-  public Stream<SimilaritySearchResult> streamSearchSimilarClothing(
+  public Stream<SimilaritySearchResult> streamSearchSimilarBook(
       List<Float> embeddingList, int limit, Map<String, String> filterMetadata)
       throws VectorDbClientException {
     try {
