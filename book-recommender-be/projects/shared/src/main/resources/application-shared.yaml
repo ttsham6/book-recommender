@@ -4,6 +4,8 @@ book-recommender:
     s3:
       bucket: bookreco-model-bucket
       prefix: model/
+  search:
+    similarity-threshold: 0.85
 spring:
   ai:
     embeddings:

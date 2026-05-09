@@ -10,6 +10,7 @@ import com.ttsham6.shared.service.LocalEmbeddingService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,14 +22,17 @@ public class BookService {
   private final DynamoDBRepository dynamoDBRepository;
   private final LocalEmbeddingService embeddingService;
   private final VectorDBRepository vectorDBRepository;
+  private final float similarityThreshold;
 
   public BookService(
       DynamoDBRepository dynamoDBRepository,
       LocalEmbeddingService embeddingService,
-      VectorDBRepository vectorDBRepository) {
+      VectorDBRepository vectorDBRepository,
+      @Value("${book-recommender.search.similarity-threshold:0.7}") float similarityThreshold) {
     this.dynamoDBRepository = dynamoDBRepository;
     this.embeddingService = embeddingService;
     this.vectorDBRepository = vectorDBRepository;
+    this.similarityThreshold = similarityThreshold;
   }
 
   public List<Book> getBooksByTitle(String query) {
@@ -44,21 +48,23 @@ public class BookService {
       final var queryEmbedding = embeddingService.embedQuery(query);
 
       // Convert float[] to List<Float>
-      final var embeddingList = new ArrayList<Float>();
+      final var queryEmbeddingList = new ArrayList<Float>();
       for (final var value : queryEmbedding) {
-        embeddingList.add(value);
+        queryEmbeddingList.add(value);
       }
 
       // ベクトル検索を実行
       final var vectorResultStream =
-          vectorDBRepository.streamSearchSimilarClothing(embeddingList, LIMIT * 2, null);
+          vectorDBRepository.streamSearchSimilarBook(queryEmbeddingList, LIMIT * 2, null);
 
       // DynamoDBから実際のアイテムを取得
       return vectorResultStream
+          .filter(item -> item.score() >= similarityThreshold)
           .map(item -> dynamoDBRepository.findById(item.id()))
           .filter(Optional::isPresent)
           .map(Optional::get)
           .map(BookDto::toBook)
+          .limit(LIMIT)
           .toList();
     } catch (VectorDbClientException e) {
       logger.error("Vector search failed", e);
