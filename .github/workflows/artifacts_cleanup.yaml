@@ -7,6 +7,10 @@ on:
   # 手動実行
   workflow_dispatch:
 
+permissions:
+  actions: write
+  contents: read
+
 jobs:
   delete-artifacts:
     runs-on: ubuntu-latest
