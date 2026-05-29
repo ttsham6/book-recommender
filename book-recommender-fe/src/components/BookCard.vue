@@ -4,7 +4,6 @@ defineProps<{
   title: string
   author: string
   imageUrl?: string
-  description?: string
 }>()
 
 defineEmits<{
@@ -16,47 +15,40 @@ defineEmits<{
   <div class="book-card" @click="$emit('click', id)">
     <div class="book-image-placeholder">
       <img v-if="imageUrl" :src="imageUrl" :alt="title" />
-      <span v-else>No Image</span>
+      <div v-else class="book-spine">
+        <span>BOOK</span>
+      </div>
     </div>
+
     <div class="book-info">
       <h3 class="book-title">{{ title }}</h3>
       <p class="book-author">{{ author }}</p>
-      <p v-if="description" class="book-description">{{ description }}</p>
     </div>
+
+    <div class="book-arrow" aria-hidden="true">→</div>
   </div>
 </template>
 
 <style scoped>
 .book-card {
-  display: flex;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 12px;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(17, 32, 51, 0.06);
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: 0 10px 22px rgba(17, 32, 51, 0.05);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.book-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 .book-image-placeholder {
-  width: 80px;
-  height: 120px;
-  background: linear-gradient(135deg, #e0eafc, #cfdef3);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+  width: 84px;
+  height: 118px;
+  border-radius: 14px;
   overflow: hidden;
-  color: #666;
-  font-size: 0.8rem;
+  background: linear-gradient(180deg, #dbeafe, #eff6ff);
 }
 
 .book-image-placeholder img {
@@ -65,34 +57,55 @@ defineEmits<{
   object-fit: cover;
 }
 
+.book-spine {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(180deg, rgba(30, 64, 175, 0.15), rgba(30, 64, 175, 0.02)),
+    linear-gradient(135deg, #d9e7ff, #eef4ff);
+  color: #31517a;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+}
+
 .book-info {
-  margin-left: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-width: 0;
 }
 
 .book-title {
-  margin: 0 0 4px 0;
-  font-size: 1.1rem;
-  color: #333;
-  font-weight: 600;
-  line-height: 1.3;
+  margin: 0;
+  color: #112033;
+  font-size: 1.08rem;
+  line-height: 1.35;
 }
 
 .book-author {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #666;
+  margin: 6px 0 0;
+  color: #5a6d80;
+  font-size: 0.92rem;
 }
 
-.book-description {
-  margin: 8px 0 0 0;
-  font-size: 0.85rem;
-  color: #777;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.book-arrow {
+  color: #7b8da1;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+@media (max-width: 560px) {
+  .book-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .book-image-placeholder {
+    width: 72px;
+    height: 104px;
+  }
+
+  .book-arrow {
+    display: none;
+  }
 }
 </style>

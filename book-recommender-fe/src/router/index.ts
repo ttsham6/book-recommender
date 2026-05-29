@@ -11,10 +11,9 @@ const router = createRouter({
       component: SearchView
     },
     {
-      path: '/recommend/:id',
+      path: '/recommend',
       name: 'recommend',
-      component: RecommendView,
-      props: true
+      component: RecommendView
     }
   ]
 })
