@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalEmbeddingService implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(LocalEmbeddingService.class);
+  private static final int MAX_SEQUENCE_LENGTH = 512;
   private static final String QUANTIZED_MODEL_FILE_NAME = "model_quantized.onnx";
   private static final String TOKENIZER_MODEL_FILE_NAME = "tokenizer.onnx";
 
@@ -217,6 +218,9 @@ public class LocalEmbeddingService implements AutoCloseable {
       attentionMask =
           attentionMask != null ? attentionMask : createFilledArray(inputIds.length, 1L);
       tokenTypeIds = tokenTypeIds != null ? tokenTypeIds : new long[inputIds.length];
+      inputIds = truncateIfNeeded("input_ids", inputIds, text);
+      attentionMask = truncateIfNeeded("attention_mask", attentionMask, text);
+      tokenTypeIds = truncateIfNeeded("token_type_ids", tokenTypeIds, text);
       return new ModelInputs(inputIds, attentionMask, tokenTypeIds);
     }
   }
@@ -237,6 +241,21 @@ public class LocalEmbeddingService implements AutoCloseable {
     final var values = new long[length];
     Arrays.fill(values, value);
     return values;
+  }
+
+  /** モデル最大長を超えるトークン列を切り詰め、位置埋め込み長不一致を防ぐ。 */
+  private long[] truncateIfNeeded(String tensorName, long[] values, String text) {
+    if (values.length <= MAX_SEQUENCE_LENGTH) {
+      return values;
+    }
+
+    logger.warn(
+        "Tokenizer output exceeded max sequence length. tensorName={}, originalLength={}, truncatedLength={}, textPrefix={}",
+        tensorName,
+        values.length,
+        MAX_SEQUENCE_LENGTH,
+        text.substring(0, Math.min(text.length(), 120)));
+    return Arrays.copyOf(values, MAX_SEQUENCE_LENGTH);
   }
 
   /**
