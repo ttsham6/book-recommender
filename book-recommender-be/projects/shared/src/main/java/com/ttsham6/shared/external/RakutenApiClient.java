@@ -22,7 +22,7 @@ public class RakutenApiClient {
   private static final Logger logger = LoggerFactory.getLogger(RakutenApiClient.class);
 
   private static final int SIZE_ON_PAGE = 30;
-  private static final String BOOK_GENRE_ID = "001021001";
+  private static final String BOOK_GENRE_ID = "001004008";
   private static final String REFERER_URL = "https://book-recommender.com";
 
   private final RestTemplate rakutenRestTemplate;
@@ -76,7 +76,7 @@ public class RakutenApiClient {
       if (response == null || response.items() == null) {
         throw new RakutenApiException("Rakuten API response is null");
       }
-      return response.items().stream().map(RakutenResponseDto.RakutenItemWrapper::item);
+      return response.items().stream().map(wrapper -> wrapper.item().toBook());
     } catch (URISyntaxException | RakutenApiException e) {
       throw new RakutenApiException("Failed to fetch books from Rakuten API", e);
     }

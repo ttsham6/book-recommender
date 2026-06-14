@@ -38,7 +38,7 @@ public record BookDto(
     boolean limited,
     long reviewCount,
     double reviewAverage,
-    List<Integer> genreIds) {
+    List<String> genreIds) {
 
   public static BookDto from(Book book) {
     return BookDto.builder()
@@ -143,7 +143,7 @@ public record BookDto(
     private boolean limited;
     private long reviewCount;
     private double reviewAverage;
-    private List<Integer> genreIds;
+    private List<String> genreIds;
 
     public Builder id(String id) {
       this.id = id;
@@ -280,7 +280,7 @@ public record BookDto(
       return this;
     }
 
-    public Builder genreIds(List<Integer> genreIds) {
+    public Builder genreIds(List<String> genreIds) {
       this.genreIds = genreIds;
       return this;
     }
