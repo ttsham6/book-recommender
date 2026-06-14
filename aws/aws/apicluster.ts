@@ -70,7 +70,7 @@ export class ApiService extends pulumi.ComponentResource {
           name: "app",
           image: image.imageUri,
           cpu: args.cpu || 256,
-          memory: args.memory || 1024,
+          memory: args.memory || 512,
           essential: true,
           portMappings: [
             {
@@ -84,7 +84,7 @@ export class ApiService extends pulumi.ComponentResource {
             {
               name: "JAVA_OPTS",
               value:
-                "-Xmx384m -XX:MaxRAMPercentage=50 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
+                "-Xmx256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
             },
           ]),
         },
