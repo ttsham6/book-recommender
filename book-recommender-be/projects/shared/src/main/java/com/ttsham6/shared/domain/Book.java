@@ -32,7 +32,7 @@ public record Book(
     boolean isLimited,
     long reviewCount,
     double reviewAverage,
-    List<Integer> genreIds) {
+    List<String> genreIds) {
 
   public Book {
     if (id == null) {

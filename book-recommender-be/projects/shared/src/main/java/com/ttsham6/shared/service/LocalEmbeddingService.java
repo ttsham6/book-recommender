@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,34 +26,65 @@ public class LocalEmbeddingService implements AutoCloseable {
 
   private final ModelProperty modelProperty;
   private final ModelS3Client modelS3Client;
+  private final Environment environment;
   private OrtEnvironment env;
   private OrtSession modelSession;
   private OrtSession tokenizerSession;
   private String tokenizerInputName;
   private boolean modelRequiresTokenTypeIds;
 
-  public LocalEmbeddingService(ModelProperty modelProperty, ModelS3Client modelS3Client) {
+  public LocalEmbeddingService(
+      ModelProperty modelProperty, ModelS3Client modelS3Client, Environment environment) {
     this.modelProperty = modelProperty;
     this.modelS3Client = modelS3Client;
+    this.environment = environment;
   }
 
   /** 起動時にS3からモデル一式を取得し、tokenizer用ONNXと推論用ONNXのセッションを初期化する。 */
   public void init() throws EmbeddingServiceException {
-    try {
-      modelS3Client.downloadModel(
-          modelProperty.s3().bucket(), modelProperty.s3().prefix(), modelProperty.dir());
-    } catch (ModelS3ClientException e) {
-      throw new EmbeddingServiceException(
-          "Failed to initialize LocalEmbeddingService due to model download failure", e);
+    if (isInitialized()) {
+      logger.info("LocalEmbeddingService already initialized. Skip re-initialization.");
+      return;
+    }
+
+    final var modelDir = Paths.get(modelProperty.dir());
+    if (!hasRequiredModelFiles(modelDir)) {
+      if (isLocalProfile()) {
+        logger.info("Local profile detected and model files not found. Skip LocalEmbeddingService initialization.");
+        return;
+      }
+
+      try {
+        modelS3Client.downloadModel(
+            modelProperty.s3().bucket(), modelProperty.s3().prefix(), modelProperty.dir());
+      } catch (ModelS3ClientException e) {
+        throw new EmbeddingServiceException(
+            "Failed to initialize LocalEmbeddingService due to model download failure", e);
+      }
+    } else {
+      logger.info("Local model files already exist. Skip model download.");
     }
 
     try {
-      initializeSessions(Paths.get(modelProperty.dir()));
+      initializeSessions(modelDir);
 
       logger.info("LocalEmbeddingService initialized successfully with quantized ONNX model.");
     } catch (Exception e) {
       throw new EmbeddingServiceException("Failed to initialize LocalEmbeddingService", e);
     }
+  }
+
+  private boolean isInitialized() {
+    return modelSession != null && tokenizerSession != null && tokenizerInputName != null;
+  }
+
+  private boolean hasRequiredModelFiles(Path modelDir) {
+    return Files.exists(modelDir.resolve(QUANTIZED_MODEL_FILE_NAME))
+        && Files.exists(modelDir.resolve(TOKENIZER_MODEL_FILE_NAME));
+  }
+
+  private boolean isLocalProfile() {
+    return Arrays.asList(environment.getActiveProfiles()).contains("local");
   }
 
   /** モデル配置ディレクトリから必要ファイルを見つけ、tokenizer用と推論用のONNXセッションを構築する。 */

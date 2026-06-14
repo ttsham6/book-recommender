@@ -1,0 +1,78 @@
+package com.ttsham6.shared.domain;
+
+public enum RakutenBookGenre {
+  JAPANESE_NOVEL("001004008", "日本の小説"),
+  FOREIGN_NOVEL("001004009", "外国の小説"),
+  MYSTERY_SUSPENSE("001004001", "ミステリー・サスペンス"),
+  SF_HORROR("001004002", "SF・ホラー"),
+  ESSAY("001004003", "エッセイ"),
+  NONFICTION("001004004", "ノンフィクション"),
+  ROMANCE("001004016", "ロマンス"),
+  OTHER_FICTION("001004015", "その他"),
+  BOYS("001017005", "少年"),
+  GIRLS("001017006", "少女"),
+  OTHER_YOUTH("001017004", "その他"),
+  NOVEL("001021001", "小説"),
+  COMIC("001021002", "コミック"),
+  OTHER_BOOK("001021003", "その他"),
+  NOVEL_MEDIA("001029001", "小説"),
+  COMIC_MEDIA("001029002", "コミック"),
+  NOVEL_ESSAY_EBOOK("001019001", "小説・エッセイ"),
+  BEAUTY_LIFESTYLE_HEALTH_COOKING_EBOOK("001019002", "美容・暮らし・健康・料理"),
+  HOBBY_SPORTS_ART_EBOOK("001019003", "ホビー・スポーツ・美術"),
+  LANGUAGE_STUDY_GUIDE_EBOOK("001019005", "語学・学習参考書"),
+  TRAVEL_STUDY_ABROAD_OUTDOOR_EBOOK("001019006", "旅行・留学・アウトドア"),
+  HUMANITIES_THOUGHT_SOCIETY_EBOOK("001019007", "人文・思想・社会"),
+  BUSINESS_ECONOMY_CAREER_EBOOK("001019008", "ビジネス・経済・就職"),
+  COMPUTER_SYSTEM_DEVELOPMENT_EBOOK("001019009", "パソコン・システム開発"),
+  SCIENCE_MEDICINE_TECHNOLOGY_EBOOK("001019010", "科学・医学・技術"),
+  MANGA_COMIC_EBOOK("001019011", "漫画（コミック）"),
+  LIGHT_NOVEL_EBOOK("001019012", "ライトノベル"),
+  ENTERTAINMENT_EBOOK("001019013", "エンタメ"),
+  PHOTO_BOOK_TALENT_EBOOK("001019014", "写真集・タレント"),
+  OTHER_EBOOK("001019015", "その他"),
+  NOVEL_ESSAY_PAPER("001020001", "小説・エッセイ"),
+  BEAUTY_LIFESTYLE_HEALTH_COOKING_PAPER("001020002", "美容・暮らし・健康・料理"),
+  HOBBY_SPORTS_ART_PAPER("001020003", "ホビー・スポーツ・美術"),
+  PICTURE_BOOK_CHILDRENS_BOOK_ATLAS_PAPER("001020004", "絵本・児童書・図鑑"),
+  LANGUAGE_STUDY_GUIDE_PAPER("001020005", "語学・学習参考書"),
+  TRAVEL_STUDY_ABROAD_OUTDOOR_PAPER("001020006", "旅行・留学・アウトドア"),
+  HUMANITIES_THOUGHT_SOCIETY_PAPER("001020007", "人文・思想・社会"),
+  BUSINESS_ECONOMY_CAREER_PAPER("001020008", "ビジネス・経済・就職"),
+  COMPUTER_SYSTEM_DEVELOPMENT_PAPER("001020009", "パソコン・システム開発"),
+  SCIENCE_MEDICINE_TECHNOLOGY_PAPER("001020010", "科学・医学・技術"),
+  ENTERTAINMENT_PAPER("001020011", "エンタメ"),
+  OTHER_PAPER("001020014", "その他"),
+  LOVE("001010001", "恋愛"),
+  PREGNANCY_CHILDBIRTH_PARENTING("001010002", "妊娠・出産・子育て"),
+  PET("001010003", "ペット"),
+  HOME_INTERIOR("001010004", "住まい・インテリア"),
+  GARDENING_FLOWER("001010005", "ガーデニング・フラワー"),
+  DAILY_LIFE_KNOWLEDGE("001010006", "生活の知識"),
+  CEREMONIAL_OCCASIONS_MANNERS("001010008", "冠婚葬祭・マナー"),
+  HANDICRAFT("001010009", "手芸"),
+  HEALTH("001010010", "健康"),
+  COOKING("001010011", "料理"),
+  DRINK_ALCOHOL("001010012", "ドリンク・お酒"),
+  WAY_OF_LIFE_RELAXATION("001010013", "生き方・リラクゼーション"),
+  FORTUNE_TELLING("001010007", "占い"),
+  FASHION_BEAUTY("001010014", "ファッション・美容"),
+  GENERAL_GOODS("001010016", "雑貨"),
+  OTHER_LIFESTYLE("001010015", "その他");
+
+  private final String id;
+  private final String value;
+
+  RakutenBookGenre(String id, String value) {
+    this.id = id;
+    this.value = value;
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getValue() {
+    return value;
+  }
+}
