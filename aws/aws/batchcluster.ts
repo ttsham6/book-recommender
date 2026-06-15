@@ -58,7 +58,7 @@ export class BatchService extends pulumi.ComponentResource {
       {
         family: `${appName}-task`,
         cpu: "256",
-        memory: "512",
+        memory: "1024",
         requiresCompatibilities: ["FARGATE"],
         networkMode: "awsvpc",
         taskRoleArn: args.taskRoleArn,
@@ -75,7 +75,7 @@ export class BatchService extends pulumi.ComponentResource {
                   {
                     name: "JAVA_OPTS",
                     value:
-                      "-Xmx256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
+                      "-Xmx384m -XX:MaxRAMPercentage=50 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heapdump.hprof",
                   },
                 ]),
                 logConfiguration: {
