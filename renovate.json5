@@ -1,0 +1,61 @@
+{
+  // Docs: https://docs.renovatebot.com/
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  extends: [
+    "config:recommended",
+  ],
+
+  timezone: "Asia/Tokyo",
+  dependencyDashboard: true,
+  labels: ["dependencies"],
+
+  enabledManagers: [
+    "npm",
+    "gradle",
+    "dockerfile",
+    "github-actions",
+  ],
+
+  packageRules: [
+    {
+      description: "Patch updates grouped",
+      matchUpdateTypes: ["patch"],
+      groupName: "all patch dependencies",
+    },
+    {
+      description: "Minor updates grouped",
+      matchUpdateTypes: ["minor"],
+      groupName: "all minor dependencies",
+    },
+    {
+      description: "Major updates require manual approval from dashboard",
+      matchUpdateTypes: ["major"],
+      dependencyDashboardApproval: true,
+    },
+    {
+      description: "Frontend npm dependencies",
+      matchManagers: ["npm"],
+      matchFileNames: ["book-recommender-fe/package.json"],
+      groupName: "frontend dependencies",
+    },
+    {
+      description: "AWS npm dependencies",
+      matchManagers: ["npm"],
+      matchFileNames: ["aws/package.json"],
+      groupName: "aws dependencies",
+    },
+    {
+      description: "Backend Gradle dependencies",
+      matchManagers: ["gradle"],
+      matchFileNames: ["book-recommender-be/**"],
+      groupName: "backend dependencies",
+    },
+  ],
+
+  ignorePaths: [
+    "**/node_modules/**",
+    "**/build/**",
+    "**/dist/**",
+  ],
+}
