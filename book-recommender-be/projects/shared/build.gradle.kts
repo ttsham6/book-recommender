@@ -1,7 +1,7 @@
 plugins {
     java
     `java-library`
-    id("org.springframework.boot") version "3.4.4"
+    id("org.springframework.boot") version "3.5.15"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -23,21 +23,21 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-test")
     api("org.springframework.ai:spring-ai-transformers-spring-boot-starter:1.0.0-M6")
 
-    api(platform("software.amazon.awssdk:bom:2.31.47"))
-    api("software.amazon.awssdk:dynamodb-enhanced:2.31.47")
+    api(platform("software.amazon.awssdk:bom:2.46.15"))
+    api("software.amazon.awssdk:dynamodb-enhanced:2.46.15")
     api("software.amazon.awssdk:s3")
     api("software.amazon.awssdk:s3-transfer-manager")
 
     api("io.pinecone:pinecone-client:5.1.0:all") {
         isTransitive = false
     }
-    api("io.grpc:grpc-api:1.60.2")
+    api("io.grpc:grpc-api:1.82.0")
 
     // Local Inference (LangChain4j)
-    api("dev.langchain4j:langchain4j-core:0.35.0")
-    api("dev.langchain4j:langchain4j-embeddings:0.35.0")
+    api("dev.langchain4j:langchain4j-core:0.36.2")
+    api("dev.langchain4j:langchain4j-embeddings:0.36.2")
     // For ONNX support
-    api("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.35.0")
+    api("dev.langchain4j:langchain4j-embeddings-all-minilm-l6-v2:0.36.2")
     api("com.microsoft.onnxruntime:onnxruntime-extensions:0.13.0")
 
     api("org.junit.platform:junit-platform-launcher")

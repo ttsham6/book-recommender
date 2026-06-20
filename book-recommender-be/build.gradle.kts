@@ -1,8 +1,8 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.4.4" apply false
+    id("org.springframework.boot") version "3.5.15" apply false
     id("io.spring.dependency-management") version "1.1.7" apply false
-    id("com.diffplug.spotless") version "8.2.1" apply false
+    id("com.diffplug.spotless") version "8.7.0" apply false
 }
 
 group = "com.ttsham6"
