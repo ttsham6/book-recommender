@@ -10,7 +10,7 @@ runs:
   using: "composite"
   steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v7
 
     - name: Setup Gradle Cache
       uses: actions/cache@v5
