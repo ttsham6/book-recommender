@@ -35,7 +35,7 @@ runs:
           ${{ runner.os }}-node-
 
     - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v6
       with:
         aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
         aws-region: ${{ env.AWS_REGION }}
