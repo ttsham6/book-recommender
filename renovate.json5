@@ -13,7 +13,6 @@
   enabledManagers: [
     "npm",
     "gradle",
-    "dockerfile",
     "github-actions",
   ],
 
