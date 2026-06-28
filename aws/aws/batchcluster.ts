@@ -145,6 +145,7 @@ export class BatchService extends pulumi.ComponentResource {
       {
         description: `Schedule for ${appName} batch`,
         scheduleExpression: args.scheduleExpression || "cron(0 15 * * ? *)",
+        isEnabled: false,
       },
       { parent: this }
     );

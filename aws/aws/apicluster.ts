@@ -100,7 +100,7 @@ export class ApiService extends pulumi.ComponentResource {
         subnets: args.subnetIds,
         securityGroups: [args.containerSgId],
       },
-      desiredCount: 1,
+      desiredCount: 0,
     });
 
     const scalableTarget = new aws.appautoscaling.Target(
@@ -128,18 +128,18 @@ export class ApiService extends pulumi.ComponentResource {
       { parent: this, dependsOn: [scalableTarget] }
     );
 
-    new aws.appautoscaling.ScheduledAction(
-      `${appName}-morning-start`,
-      {
-        name: `${appName}-morning-start`,
-        serviceNamespace: "ecs",
-        schedule: "cron(0 23 ? * FRI,SAT *)", // JST 8:00 AM on Saturday and Sunday
-        scalableDimension: "ecs:service:DesiredCount",
-        resourceId: pulumi.interpolate`service/${cluster.name}/${service.service.name}`,
-        scalableTargetAction: { minCapacity: 1, maxCapacity: 1 },
-      },
-      { parent: this, dependsOn: [scalableTarget] }
-    );
+    // new aws.appautoscaling.ScheduledAction(
+    //   `${appName}-morning-start`,
+    //   {
+    //     name: `${appName}-morning-start`,
+    //     serviceNamespace: "ecs",
+    //     schedule: "cron(0 23 ? * FRI,SAT *)", // JST 8:00 AM on Saturday and Sunday
+    //     scalableDimension: "ecs:service:DesiredCount",
+    //     resourceId: pulumi.interpolate`service/${cluster.name}/${service.service.name}`,
+    //     scalableTargetAction: { minCapacity: 1, maxCapacity: 1 },
+    //   },
+    //   { parent: this, dependsOn: [scalableTarget] }
+    // );
 
     this.loadBalancerDnsName = loadBalancer.loadBalancer.dnsName;
     this.loadBalancerListenerArn = pulumi
