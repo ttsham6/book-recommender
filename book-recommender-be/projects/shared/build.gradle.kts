@@ -1,7 +1,7 @@
 plugins {
     java
     `java-library`
-    id("org.springframework.boot") version "3.5.15"
+    id("org.springframework.boot") version "3.5.16"
     id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -23,8 +23,8 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-test")
     api("org.springframework.ai:spring-ai-transformers-spring-boot-starter:1.0.0-M6")
 
-    api(platform("software.amazon.awssdk:bom:2.46.17"))
-    api("software.amazon.awssdk:dynamodb-enhanced:2.46.17")
+    api(platform("software.amazon.awssdk:bom:2.46.18"))
+    api("software.amazon.awssdk:dynamodb-enhanced:2.46.18")
     api("software.amazon.awssdk:s3")
     api("software.amazon.awssdk:s3-transfer-manager")
 
