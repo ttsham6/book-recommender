@@ -23,15 +23,15 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-test")
     api("org.springframework.ai:spring-ai-transformers-spring-boot-starter:1.0.0-M6")
 
-    api(platform("software.amazon.awssdk:bom:2.51.3"))
-    api("software.amazon.awssdk:dynamodb-enhanced:2.51.3")
+    api(platform("software.amazon.awssdk:bom:2.54.17"))
+    api("software.amazon.awssdk:dynamodb-enhanced:2.54.17")
     api("software.amazon.awssdk:s3")
     api("software.amazon.awssdk:s3-transfer-manager")
 
     api("io.pinecone:pinecone-client:5.1.0:all") {
         isTransitive = false
     }
-    api("io.grpc:grpc-api:1.83.1")
+    api("io.grpc:grpc-api:1.84.0")
 
     // Local Inference (LangChain4j)
     api("dev.langchain4j:langchain4j-core:0.36.2")
